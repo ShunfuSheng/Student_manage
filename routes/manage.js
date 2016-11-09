@@ -16,7 +16,10 @@ var studentSchema = new Schema({
     user_id: String,
     name: String,
     sex: String,
-    birthday: Date,
+    birthday: {
+        type: Date,
+        default: Date.now()
+    },
     mobile: String,
     email: String,
     location: String
@@ -28,10 +31,9 @@ studentSchema.methods.getAge = function () {
 }
 //处理生日日期
 studentSchema.methods.getBirthday = function () {
-    var birthday = this.birthday;
-    var year = birthday.getFullYear();
-    var month = birthday.getMonth()+1;
-    var date = birthday.getDate();
+    var year = this.birthday.getFullYear();
+    var month = this.birthday.getMonth()+1;
+    var date = this.birthday.getDate();
     return (year + '-' + month + '-' + date);
 }
 //拿到模型对象
@@ -40,18 +42,10 @@ var Student = mongoDB.model('student',studentSchema);
 
 
 
-
 //学生信息展示页
 router.get('/', function(req, res) {
-    var student_info = [];
     Student.find().exec().then(function (data) {
-        student_info = data;
-        data.forEach(function (ele, index) {
-            student_info[index].age = ele.getAge();
-            student_info[index].birthdays = ele.getBirthday();
-            // console.log(student_info[index]);
-        });
-        res.render('list', {student_info: student_info});
+        res.render('list', {student_info: data});
     }).catch(function (err) {
         res.render('error',{message: err});
     })
@@ -66,17 +60,7 @@ router.get('/edit', function (req, res) {
 
 //添加记录，数据库存储处理
 router.post('/edit', function (req, res) {
-    var obj = {};
-    obj.user_id = req.body.user_id;
-    obj.name = req.body.user_name;
-    obj.sex = (req.body.sex == 'man')? '男':'女';
-    var dateStr = req.body.user_bir;
-    obj.birthday = Date.parse(dateStr);
-    obj.mobile = req.body.user_mobile;
-    obj.email = req.body.user_email;
-    obj.location = req.body.user_loc;
-
-    var new_student = new Student(obj);
+    var new_student = new Student(req.body);
     new_student.save(function (err) {
         if(err){
             console.log(err);
@@ -90,5 +74,5 @@ router.post('/edit', function (req, res) {
 })
 
 
-
+//导出子模块
 module.exports = router;
