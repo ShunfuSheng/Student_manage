@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生信息编辑</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="/lib/js/jquery.js"></script>
+    <script src="/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .form-group{
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    	<div class="panel panel-info">
+    		  <div class="panel-heading">
+    				<h3 class="panel-title" style="text-align: center">学生信息编辑</h3>
+    		  </div>
+    		  <div class="panel-body has-success">
+    				<form action="#" id="studentInfo" method="post" class="form" role="form">
+                        <div class="form-group">
+                            <label for="user_id">序号</label>
+                            <input type="text" class="form-control input-lg" name="user_id" id="user_id" placeholder="请输入序号">
+                        </div>
+    					<div class="form-group">
+    						<label for="user_name">姓名</label>
+    						<input type="text" class="form-control input-lg" name="user_name" id="user_name" placeholder="请输入姓名">
+    					</div>
+                        <div class="form-group">
+                            <label for="male">性别</label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="sex" id="male" value="man">
+                                    男
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="sex" id="female" value="woman">
+                                    女
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="user_age">年龄</label>
+                            <input type="text" class="form-control input-lg" name="user_age" id="user_age" placeholder="请输入年龄">
+                        </div>
+                        <div class="form-group">
+                            <label for="user_bir">出生日期</label>
+                            <input type="text" style="height: 46px;" class="form-control input-lg Wdate" onclick="WdatePicker()" name="user_bir" id="user_bir" placeholder="请输入出生日期">
+                        </div>
+                        <div class="form-group">
+                            <label for="user_mobile">手机号</label>
+                            <input type="text" class="form-control input-lg" name="user_mobile" id="user_mobile" placeholder="请输入手机号">
+                        </div>
+                        <div class="form-group">
+                            <label for="user_email">邮箱</label>
+                            <input type="text" class="form-control input-lg" name="user_email" id="user_email" placeholder="请输入邮箱">
+                        </div>
+                        <div class="form-group">
+                            <label for="user_loc">家庭住址</label>
+                            <input type="text" class="form-control input-lg" name="user_loc" id="user_loc" placeholder="请输入家庭住址">
+                        </div>
+    					<button type="submit" class="btn btn-success btn-lg pull-right">保存</button>
+    				</form>
+    		  </div>
+    	</div>
+    </div>
+</body>
+</html>
+
+<script src="/lib/js/jquery.validate.js"></script>
+<!--引入自定义错误信息-->
+<script src="/lib/js/messages_zh.js"></script>
+<script>
+    // 自定义验证规则Api 用于验证手机号
+    $.validator.addMethod('isMobile',function(value,ele){
+        var length = value.length;
+        var reg = /^1[3,5,7,8](\d{9})$/;
+        if(length==11 && reg.test(value)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    })
+
+    $('#studentInfo').validate({
+        //截下表单的提交另做处理
+        submitHandler:function(ele){
+//            alert('验证通过,准备提交!');
+//            console.dir(ele);
+            // 在此处通过ajax方式提交表单数据到服务器
+            $.ajax({
+                type:'post',
+                url:'/manage/edit',
+                dataType:'json',
+                data:$(ele).serialize(),
+                success:function(res){
+                    alert(res.msg);
+                    window.location.href = '/manage/';
+                },
+                error:function (err) {
+                    console.log(err);
+                }
+            })
+        },
+        // 验证规则
+        rules:{
+            user_id:{
+                required:true,
+                digits:true,
+                minlength:5
+            },
+            user_name:{
+                required:true,
+                minlength:2,
+                maxlength:5
+            },
+            user_age:{
+                digits:true,
+                range:[1,150]
+            },
+            user_bir:{
+                dateISO:true
+            },
+            user_email:{
+                email:true
+            },
+            user_mobile:{
+                required:true,
+                isMobile:true
+            },
+            user_loc:{
+                required:true,
+                rangelength:[5,25]
+            }
+        }
+    })
+</script>
