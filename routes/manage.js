@@ -57,13 +57,32 @@ var Student = mongoDB.model('student',studentSchema);
 
 
 //学生信息展示页
-router.get('/', function(req, res) {
-    Student.find().exec().then(function (data) {
-        res.render('list', {student_info: data});
-    }).catch(function (err) {
-        res.render('error',{message: err});
+router.get('/:page?', function(req, res) {
+    var currentPage = 1;
+    var perItemsCount = 10;
+    var totalItems = 0;
+    if (req.params.page) {
+        currentPage = req.params.page;
+    }
+    //统计数据总量
+    Student.count({}, function (err, count) {
+        if(err){
+            console.dir(err);
+        }else{
+            totalItems = count;
+            var total_page = Math.ceil(totalItems/perItemsCount);
+
+            //查询所有数据
+            Student.find({}, function (err, data) {
+                if(err){
+                    console.dir(err);
+                }else{
+                    res.render('list', {student_info: data, page: currentPage, total_page: total_page});
+                }
+            }).limit(perItemsCount).skip((currentPage - 1) * perItemsCount);
+        }
     })
-});
+})
 
 
 //跳转新增数据页面
@@ -77,7 +96,7 @@ router.post('/edit', function (req, res) {
     var new_student = new Student(req.body);
     new_student.save(function (err) {
         if(err){
-            console.log(err);
+            console.dir(err);
         }else{
             res.json({
                 status: 200,

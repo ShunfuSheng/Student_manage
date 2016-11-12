@@ -51,7 +51,22 @@
                   <script src="/lib/list.js"></script>
     		  </div>
     	</div>
-        <a href="/manage/{{page}}" class="btn btn-danger btn-block" role="button" style="margin-bottom: 50px">下一页</a>
+        <div class="btn-group btn-group-justified" style="margin-bottom: 50px">
+            <div class="btn-group">
+                {{if page==1}}
+                <button class="btn btn-info" disabled="disabled">上一页</button>
+                {{else}}
+                <a href="/manage/{{page-1}}" class="btn btn-info" role="button">上一页</a>
+                {{/if}}
+            </div>
+            <div class="btn-group">
+                {{if page==total_page}}
+                <button class="btn btn-info" disabled="disabled">下一页</button>
+                {{else}}
+                <a href="/manage/{{(page*1)+1}}" class="btn btn-info" role="button">下一页</a>
+                {{/if}}
+            </div>
+        </div>
     </div>
 </body>
 </html>
