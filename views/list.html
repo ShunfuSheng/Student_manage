@@ -14,7 +14,7 @@
     				<h3 class="panel-title" style="text-align: center">学生管理信息</h3>
     		  </div>
     		  <div class="panel-body">
-                    <button onclick="location.href='/manage/edit'" type="button" class="btn btn-danger pull-right">新增</button>
+                    <button onclick="location.href='/manage/edit'" type="button" class="btn btn-danger pull-right" style="margin-bottom: 10px">新增</button>
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -26,6 +26,7 @@
                                 <th>手机号</th>
                                 <th>邮箱</th>
                                 <th>家庭住址</th>
+                                <th>编辑</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,12 +40,18 @@
                                     <td>{{$value.mobile}}</td>
                                     <td>{{$value.email}}</td>
                                     <td>{{$value.location}}</td>
+                                    <td style="text-align: center">
+                                        <a href="/manage/operate?id={{$value.getId()}}" class="btn btn-success" role="button">修改</a>
+                                        <a href="javascript:;" class="btn btn-info del" data-id="{{$value.getId()}}" data-name="{{$value.name}}" role="button">删除</a>
+                                    </td>
                                 </tr>
                             {{/each}}
                         </tbody>
                     </table>
+                  <script src="/lib/list.js"></script>
     		  </div>
     	</div>
+        <a href="/manage/{{page}}" class="btn btn-danger btn-block" role="button" style="margin-bottom: 50px">下一页</a>
     </div>
 </body>
 </html>

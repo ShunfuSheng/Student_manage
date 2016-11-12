@@ -36,10 +36,24 @@ studentSchema.methods.getBirthday = function () {
     var date = this.birthday.getDate();
     return (year + '-' + month + '-' + date);
 }
+//获取id
+studentSchema.methods.getId = function () {
+    return JSON.stringify(this._id);
+}
+//定义静态方法，即类方法，通过模型名加方法名直接调用
+studentSchema.statics.findByName = function (name, callBack) {
+    this.find({name:name},callBack).exec();
+}
 //拿到模型对象
 var Student = mongoDB.model('student',studentSchema);
 
-
+// Student.findByName('盛舜赋',function (err, data) {
+//     if(err){
+//         console.log(err);
+//     }else{
+//         console.log(data);
+//     }
+// })
 
 
 //学生信息展示页
@@ -52,9 +66,9 @@ router.get('/', function(req, res) {
 });
 
 
-//页面跳转处理
+//跳转新增数据页面
 router.get('/edit', function (req, res) {
-    res.render('editor',{});
+    res.render('editor');
 })
 
 
@@ -72,6 +86,52 @@ router.post('/edit', function (req, res) {
         }
     })
 })
+
+
+//跳转修改数据页面
+router.get('/operate', function (req, res) {
+    //解json
+    var id = JSON.parse(req.query.id);
+    Student.findOne({_id: id}).exec().then(function (data) {
+        res.render('operate', {data: data});
+    }).catch(function (err) {
+        res.render('error', {error: err, message:'errorCode: 500'});
+    });
+})
+
+//修改记录，数据库修改处理
+router.post('/operate', function (req, res) {
+    var data = req.body;
+    var id = JSON.parse(data.recordId);
+
+    var obj = {};
+    //循环赋值并删掉key为recordId的值
+    for(var index in data){
+        obj[index] = data[index];
+    }
+    delete obj.recordId;
+
+    //执行修改操作
+    Student.findByIdAndUpdate(id, obj, function () {
+        res.redirect('/manage/');
+    })
+})
+
+
+//删除一条记录
+router.get('/del/:id/:name', function (req, res) {
+    var data = req.params;
+    //解json
+    var userId = JSON.parse(data.id);
+    //执行删除操作
+    Student.findByIdAndRemove(userId, function () {
+        res.json({status: '200', msg: '删除成功'});
+    }).catch(function (err) {
+        res.json({status: '200', msg: '删除失败', error: err});
+    });
+})
+
+
 
 
 //导出子模块

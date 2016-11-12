@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生信息修改</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="/lib/js/jquery.js"></script>
+    <script src="/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .form-group{
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="text-align: center">学生信息修改</h3>
+        </div>
+        <div class="panel-body has-success">
+            <form action="/manage/operate" id="studentInfo" method="post" class="form" role="form">
+                <input type="text" name="recordId" id="recordId" value="{{data.getId()}}" style="display: none">
+                <div class="form-group">
+                    <label for="user_id">序号</label>
+                    <input type="text" class="form-control input-lg" name="user_id" id="user_id" value="{{data.user_id}}">
+                </div>
+                <div class="form-group">
+                    <label for="user_name">姓名</label>
+                    <input type="text" class="form-control input-lg" name="name" id="user_name" value="{{data.name}}">
+                </div>
+                <div class="form-group">
+                    <label for="male">性别</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="sex" id="male" value="男" {{data.sex=='男'?'checked':null}}>
+                            男
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="sex" id="female" value="女" {{data.sex=='女'?'checked':null}}>
+                            女
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="user_age">年龄</label>
+                    <input type="text" class="form-control input-lg" name="age" id="user_age" value="{{data.getAge()}}">
+                </div>
+                <div class="form-group">
+                    <label for="user_bir">出生日期</label>
+                    <input type="text" style="height: 46px;" class="form-control input-lg Wdate" onclick="WdatePicker()" name="birthday" id="user_bir" value="{{data.getBirthday()}}">
+                </div>
+                <div class="form-group">
+                    <label for="user_mobile">手机号</label>
+                    <input type="text" class="form-control input-lg" name="mobile" id="user_mobile"value="{{data.mobile}}">
+                </div>
+                <div class="form-group">
+                    <label for="user_email">邮箱</label>
+                    <input type="text" class="form-control input-lg" name="email" id="user_email" value="{{data.email}}">
+                </div>
+                <div class="form-group">
+                    <label for="user_loc">家庭住址</label>
+                    <input type="text" class="form-control input-lg" name="location" id="user_loc" value="{{data.location}}">
+                </div>
+                <button type="submit" class="btn btn-success btn-lg pull-right">保存</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
