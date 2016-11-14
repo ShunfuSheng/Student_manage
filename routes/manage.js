@@ -57,12 +57,12 @@ var Student = mongoDB.model('student',studentSchema);
 
 
 //学生信息展示页
-router.get('/:page?', function(req, res) {
+router.get('/', function(req, res) {
     var currentPage = 1;
     var perItemsCount = 10;
     var totalItems = 0;
-    if (req.params.page) {
-        currentPage = req.params.page;
+    if (req.query.page) {
+        currentPage = req.query.page;
     }
     //统计数据总量
     Student.count({}, function (err, count) {
