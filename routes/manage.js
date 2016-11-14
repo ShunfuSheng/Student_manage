@@ -4,56 +4,8 @@
 
 var express = require('express');
 var router = express.Router();
-
-//数据库方面
-var mongoDB = require('mongoose');
-//使用nodejs内置的promise实现替换
-mongoDB.Promise = Promise;
-mongoDB.connect('mongodb://localhost/books_db');
-var Schema = mongoDB.Schema;
-//定义表字段，不包含年龄
-var studentSchema = new Schema({
-    user_id: String,
-    name: String,
-    sex: String,
-    birthday: {
-        type: Date,
-        default: Date.now()
-    },
-    mobile: String,
-    email: String,
-    location: String
-});
-//处理年龄
-studentSchema.methods.getAge = function () {
-    var now = new Date();
-    return (now.getFullYear() - this.birthday.getFullYear());
-}
-//处理生日日期
-studentSchema.methods.getBirthday = function () {
-    var year = this.birthday.getFullYear();
-    var month = this.birthday.getMonth()+1;
-    var date = this.birthday.getDate();
-    return (year + '-' + month + '-' + date);
-}
-//获取id
-studentSchema.methods.getId = function () {
-    return JSON.stringify(this._id);
-}
-//定义静态方法，即类方法，通过模型名加方法名直接调用
-studentSchema.statics.findByName = function (name, callBack) {
-    this.find({name:name},callBack).exec();
-}
-//拿到模型对象
-var Student = mongoDB.model('student',studentSchema);
-
-// Student.findByName('盛舜赋',function (err, data) {
-//     if(err){
-//         console.log(err);
-//     }else{
-//         console.log(data);
-//     }
-// })
+var db = require('../db');
+var Student = db.Student;
 
 
 //学生信息展示页
@@ -64,25 +16,30 @@ router.get('/:page?', function(req, res) {
     if (req.params.page) {
         currentPage = req.params.page;
     }
+
+    //查询功能
+    var filter = {};
+    if(req.query.user_name){
+        filter.name = new RegExp(String(req.query.user_name), 'i');
+    }
+    if(req.query.mobile){
+        filter.mobile = new RegExp(String(req.query.mobile), 'i');
+    }
+
     //统计数据总量
-    Student.count({}, function (err, count) {
+    Student.count(filter, function (err, count) {
         if(err){
             console.dir(err);
         }else{
             totalItems = count;
             var total_page = Math.ceil(totalItems/perItemsCount);
 
-            //查询功能
-            var filter = {};
-            if(req.query.user_name){
-                filter.name = new RegExp(String(req.query.user_name), 'i');
-            }
             //查询所有数据
             Student.find(filter, function (err, data) {
                 if(err){
                     console.dir(err);
                 }else{
-                    res.render('list', {student_info: data, page: currentPage, total_page: total_page});
+                    res.render('list', {student_info: data, page: currentPage, total_page: total_page, query:req.query});
                 }
             }).limit(perItemsCount).skip((currentPage - 1) * perItemsCount);
         }
