@@ -72,8 +72,13 @@ router.get('/:page?', function(req, res) {
             totalItems = count;
             var total_page = Math.ceil(totalItems/perItemsCount);
 
+            //查询功能
+            var filter = {};
+            if(req.query.user_name){
+                filter.name = new RegExp(String(req.query.user_name), 'i');
+            }
             //查询所有数据
-            Student.find({}, function (err, data) {
+            Student.find(filter, function (err, data) {
                 if(err){
                     console.dir(err);
                 }else{
@@ -86,13 +91,13 @@ router.get('/:page?', function(req, res) {
 
 
 //跳转新增数据页面
-router.get('/edit', function (req, res) {
+router.get('/edit/add', function (req, res) {
     res.render('editor');
 })
 
 
 //添加记录，数据库存储处理
-router.post('/edit', function (req, res) {
+router.post('/edit/add', function (req, res) {
     var new_student = new Student(req.body);
     new_student.save(function (err) {
         if(err){
