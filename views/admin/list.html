@@ -14,7 +14,7 @@
     				<h3 class="panel-title" style="text-align: center">学生管理信息</h3>
     		  </div>
     		  <div class="panel-body">
-                  <form action="/manage/" class="form-inline" method="get" role="form">
+                  <form action="/admin/manage/" class="form-inline" method="get" role="form">
                       <div class="form-group">
                           <input type="text" class="form-control" id="user_name" name="user_name" value="{{query.user_name}}" placeholder="请输入姓名">
                       </div>
@@ -23,7 +23,7 @@
                       </div>
                       <button type="submit" class="btn btn-default">搜索</button>
                   </form>
-                    <button onclick="location.href='/manage/edit/add'" type="button" class="btn btn-danger pull-right" style="margin-bottom: 10px">新增</button>
+                    <button onclick="location.href='/admin/manage/edit/add'" type="button" class="btn btn-danger pull-right" style="margin-bottom: 10px">新增</button>
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -50,7 +50,7 @@
                                     <td>{{$value.email}}</td>
                                     <td>{{$value.location}}</td>
                                     <td style="text-align: center">
-                                        <a href="/manage/perItem/operate?id={{$value.getId()}}" class="btn btn-success" role="button">修改</a>
+                                        <a href="/admin/manage/perItem/operate?id={{$value.getId()}}" class="btn btn-success" role="button">修改</a>
                                         <a href="javascript:;" class="btn btn-info del" data-id="{{$value.getId()}}" data-name="{{$value.name}}" role="button">删除</a>
                                     </td>
                                 </tr>
@@ -65,14 +65,14 @@
                 {{if page==1}}
                 <button class="btn btn-info" disabled="disabled">上一页</button>
                 {{else}}
-                <a href="/manage/{{page-1}}" class="btn btn-info" role="button">上一页</a>
+                <a href="/admin/manage/{{page-1}}" class="btn btn-info" role="button">上一页</a>
                 {{/if}}
             </div>
             <div class="btn-group">
                 {{if page==total_page}}
                 <button class="btn btn-info" disabled="disabled">下一页</button>
                 {{else}}
-                <a href="/manage/{{(page*1)+1}}" class="btn btn-info" role="button">下一页</a>
+                <a href="/admin/manage/{{(page*1)+1}}" class="btn btn-info" role="button">下一页</a>
                 {{/if}}
             </div>
         </div>
@@ -83,7 +83,6 @@
 <script>
     //点击分页时带上查询参数
     var param = window.location.search;
-    console.log(param);
     $('#take_link a').each(function () {
         var base_link = $(this).attr('href');
         $(this).attr('href', base_link + param);

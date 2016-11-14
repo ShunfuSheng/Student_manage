@@ -28,7 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //引入子模板
 app.use('/', routes);
 app.use('/users', users);
-app.use('/manage', require('./routes/manage'));
+app.use('/admin/manage', require('./routes/admin/manage'));
+app.use('/admin/admin_user', require('./routes/admin/admin_user'));
 
 
 

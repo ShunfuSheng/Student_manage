@@ -4,7 +4,7 @@
 
 var express = require('express');
 var router = express.Router();
-var db = require('../db');
+var db = require('../../db');
 var Student = db.Student;
 
 
@@ -17,7 +17,7 @@ router.get('/:page?', function(req, res) {
         currentPage = req.params.page;
     }
 
-    //查询功能
+    //查询条件
     var filter = {};
     if(req.query.user_name){
         filter.name = new RegExp(String(req.query.user_name), 'i');
@@ -26,30 +26,37 @@ router.get('/:page?', function(req, res) {
         filter.mobile = new RegExp(String(req.query.mobile), 'i');
     }
 
-    //统计数据总量
-    Student.count(filter, function (err, count) {
-        if(err){
-            console.dir(err);
-        }else{
-            totalItems = count;
-            var total_page = Math.ceil(totalItems/perItemsCount);
+    //根据条件统计数据总数量(使用Promise实现)
+    var studentCount = Student.count(filter);
+    studentCount.then((count)=> {
+        totalItems = count;
+        var total_page = Math.ceil(totalItems / perItemsCount);
 
-            //查询所有数据
-            Student.find(filter, function (err, data) {
-                if(err){
-                    console.dir(err);
-                }else{
-                    res.render('list', {student_info: data, page: currentPage, total_page: total_page, query:req.query});
-                }
-            }).limit(perItemsCount).skip((currentPage - 1) * perItemsCount);
-        }
-    })
+        //根据条件查询数据
+        var studentFind = Student.find(filter);
+        studentFind.then((data)=>{
+            res.render('admin/list', {
+                student_info: data,
+                page: currentPage,
+                total_page: total_page,
+                query: req.query
+            });
+        });
+        studentFind.catch((err)=>{
+            console.dir(err);
+        });
+        studentFind.limit(perItemsCount);
+        studentFind.skip((currentPage - 1) * perItemsCount);
+    });
+    studentCount.catch((err)=>{
+        console.dir(err);
+    });
 })
 
 
 //跳转新增数据页面
 router.get('/edit/add', function (req, res) {
-    res.render('editor');
+    res.render('admin/editor');
 })
 
 
@@ -74,7 +81,7 @@ router.get('/perItem/operate', function (req, res) {
     //解json
     var id = JSON.parse(req.query.id);
     Student.findOne({_id: id}).exec().then(function (data) {
-        res.render('operate', {data: data});
+        res.render('admin/operate', {data: data});
     }).catch(function (err) {
         res.render('error', {error: err, message:'errorCode: 500'});
     });
@@ -94,7 +101,7 @@ router.post('/perItem/operate', function (req, res) {
 
     //执行修改操作
     Student.findByIdAndUpdate(id, obj, function () {
-        res.redirect('/manage/');
+        res.redirect('/admin/manage/');
     })
 })
 

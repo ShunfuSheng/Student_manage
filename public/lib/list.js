@@ -12,12 +12,12 @@ $('.del').click(function (e) {
         var id = data.id;
         var name = data.name;
         $.ajax({
-            url: `/manage/del/${id}/${name}`,
+            url: `/admin/manage/del/${id}/${name}`,
             type: 'get',
             dataType: 'json',
             success: function (res) {
                 alert(res.msg);
-                window.location.href = '/manage/'
+                window.location.href = '/admin/manage/'
             },
             error: function (err) {
                 console.dir(err);
