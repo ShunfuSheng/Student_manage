@@ -20,8 +20,8 @@
             <h3 class="panel-title" style="text-align: center">学生信息修改</h3>
         </div>
         <div class="panel-body has-success">
-            <form action="/manage/operate" id="studentInfo" method="post" class="form" role="form">
-                <input type="text" name="recordId" id="recordId" value="{{data.getId()}}" style="display: none">
+            <form action="/manage/perItem/operate" id="studentInfo" method="post" class="form" role="form">
+                <input type="hidden" name="recordId" id="recordId" value="{{data.getId()}}">
                 <div class="form-group">
                     <label for="user_id">序号</label>
                     <input type="text" class="form-control input-lg" name="user_id" id="user_id" value="{{data.user_id}}">

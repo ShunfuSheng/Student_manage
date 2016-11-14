@@ -57,12 +57,12 @@ var Student = mongoDB.model('student',studentSchema);
 
 
 //学生信息展示页
-router.get('/', function(req, res) {
+router.get('/:page?', function(req, res) {
     var currentPage = 1;
     var perItemsCount = 10;
     var totalItems = 0;
-    if (req.query.page) {
-        currentPage = req.query.page;
+    if (req.params.page) {
+        currentPage = req.params.page;
     }
     //统计数据总量
     Student.count({}, function (err, count) {
@@ -108,7 +108,7 @@ router.post('/edit', function (req, res) {
 
 
 //跳转修改数据页面
-router.get('/operate', function (req, res) {
+router.get('/perItem/operate', function (req, res) {
     //解json
     var id = JSON.parse(req.query.id);
     Student.findOne({_id: id}).exec().then(function (data) {
@@ -119,7 +119,7 @@ router.get('/operate', function (req, res) {
 })
 
 //修改记录，数据库修改处理
-router.post('/operate', function (req, res) {
+router.post('/perItem/operate', function (req, res) {
     var data = req.body;
     var id = JSON.parse(data.recordId);
 

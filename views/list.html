@@ -41,7 +41,7 @@
                                     <td>{{$value.email}}</td>
                                     <td>{{$value.location}}</td>
                                     <td style="text-align: center">
-                                        <a href="/manage/operate?id={{$value.getId()}}" class="btn btn-success" role="button">修改</a>
+                                        <a href="/manage/perItem/operate?id={{$value.getId()}}" class="btn btn-success" role="button">修改</a>
                                         <a href="javascript:;" class="btn btn-info del" data-id="{{$value.getId()}}" data-name="{{$value.name}}" role="button">删除</a>
                                     </td>
                                 </tr>
@@ -56,14 +56,14 @@
                 {{if page==1}}
                 <button class="btn btn-info" disabled="disabled">上一页</button>
                 {{else}}
-                <a href="/manage/?page={{page-1}}" class="btn btn-info" role="button">上一页</a>
+                <a href="/manage/{{page-1}}" class="btn btn-info" role="button">上一页</a>
                 {{/if}}
             </div>
             <div class="btn-group">
                 {{if page==total_page}}
                 <button class="btn btn-info" disabled="disabled">下一页</button>
                 {{else}}
-                <a href="/manage/?page={{(page*1)+1}}" class="btn btn-info" role="button">下一页</a>
+                <a href="/manage/{{(page*1)+1}}" class="btn btn-info" role="button">下一页</a>
                 {{/if}}
             </div>
         </div>
