@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户注册</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="/lib/js/jquery.js"></script>
+    <script src="/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .form-group{
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="text-align: center">个人账号注册</h3>
+            </div>
+            <div class="panel-body has-success">
+                <form action="#" id="studentRegister" method="post" class="form" role="form">
+                    <div class="form-group">
+                        <label for="user_name">用户名</label>
+                        <input type="text" class="form-control input-lg" name="user_name" id="user_name" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">密码</label>
+                        <input type="password" class="form-control input-lg" name="pwd" id="pwd" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="rePWD">确认密码</label>
+                        <input type="password" class="form-control input-lg" name="rePWD" id="rePWD" placeholder="请再次输入你的密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">姓名</label>
+                        <input type="text" class="form-control input-lg" name="name" id="name" placeholder="请输入姓名">
+                    </div>
+                    <div class="form-group">
+                        <label for="male">性别</label>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="sex" id="male" value="男">
+                                男
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="sex" id="female" value="女">
+                                女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="user_bir">出生日期</label>
+                        <input type="text" style="height: 46px;" class="form-control input-lg Wdate" onclick="WdatePicker()" name="birthday" id="user_bir" placeholder="请输入出生日期">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_mobile">手机号</label>
+                        <input type="text" class="form-control input-lg" name="mobile" id="user_mobile" placeholder="请输入手机号">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_email">邮箱</label>
+                        <input type="text" class="form-control input-lg" name="email" id="user_email" placeholder="请输入邮箱">
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg pull-right">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="/lib/js/jquery.validate.js"></script>
+<!--引入自定义错误信息-->
+<script src="/lib/js/messages_zh.js"></script>
+<script src="/lib/common.js"></script>
+<script src="/lib/reg.js"></script>
+<script>
+    $('#studentRegister').validate({
+        //截下表单的提交另做处理
+        submitHandler:function(ele){
+            // 在此处通过ajax方式提交表单数据到服务器
+            $.ajax({
+                type:'post',
+                url:'/users/manage/register/{{data.id}}',
+                dataType:'json',
+                data:$(ele).serialize(),
+                success:function(res){
+                    alert(res.msg);
+                    location.href = '/users/manage/login';
+                },
+                error:function (err) {
+                    console.log(err);
+                }
+            })
+        },
+        // 验证规则
+        rules:{
+            user_name:{
+                required:true,
+                digits:true,
+                minlength:5
+            },
+            pwd:{
+                required:true,
+                minlength:6
+            },
+            rePWD:{
+                required:true,
+                equalTo: '#pwd'
+            },
+            name:{
+                required:true,
+                minlength:2,
+                maxlength:5
+            },
+            email:{
+                email:true
+            },
+            mobile:{
+                required:true,
+                isMobile:true
+            }
+        }
+    })
+</script>

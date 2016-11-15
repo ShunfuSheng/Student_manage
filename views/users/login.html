@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生登录界面</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="/lib/js/jquery.js"></script>
+    <script src="/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .form-group{
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <a class="navbar-brand" href="#">学生图书借阅系统</a>
+        <ul class="nav navbar-nav">
+            <li class="active">
+                <a href="/">书籍列表</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">用户中心 <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="/users/manage/login">登录</a></li>
+                    <li><a href="/users/manage/register">注册</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container" style="padding-top: 80px">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="text-align: center">学生登录界面</h3>
+            </div>
+            <div class="panel-body has-success">
+                <form action="javascript:;" id="studentAccount" method="post" class="form" role="form">
+                    <div class="form-group">
+                        <label for="user_name">用户名</label>
+                        <input type="text" class="form-control input-lg" name="user_name" id="user_name" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="user_pwd">密码</label>
+                        <input type="password" class="form-control input-lg" name="user_pwd" id="user_pwd" placeholder="请输入密码">
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-lg pull-right">登录</button>
+                </form>
+                <a href="/users/manage/register" class="btn btn-danger btn-lg pull-left">注册</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="/lib/js/jquery.validate.js"></script>
+<!--引入自定义错误信息-->
+<script src="/lib/js/messages_zh.js"></script>
+<script src="/lib/common.js"></script>
+<script>
+    $('#studentAccount').validate({
+        //截下表单的提交另做处理
+        submitHandler:function(ele){
+            // 在此处通过ajax方式提交表单数据到服务器
+            $.ajax({
+                type:'post',
+                url:'/users/manage/login',
+                dataType:'json',
+                data:$(ele).serialize(),
+                success:function(res){
+                    if(res.status == '200'){
+                        window.location.reload();
+                    }else{
+                        alert(res.msg);
+                        return false;
+                    }
+                },
+                error:function (err) {
+                    console.log(err);
+                }
+            })
+        },
+        // 验证规则
+        rules:{
+            user_name:{
+                required:true,
+                minlength:3
+            },
+            user_pwd:{
+                required:true,
+                minlength:2
+            }
+        }
+    })
+</script>

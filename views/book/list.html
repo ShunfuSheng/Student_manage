@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图书信息展示</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="/lib/js/jquery.js"></script>
+    <script src="/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <a class="navbar-brand" href="#">学生图书借阅系统</a>
+        <ul class="nav navbar-nav">
+            <li class="active">
+                <a href="/">书籍列表</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {{if isLogined}}
+            <li><a href="/users/manage/info">用户信息</a></li>
+            <li><a onclick="logOut()" href="javascript:;">{{user.name}} 退出<span class="glyphicon glyphicon-new-window"></span></a></li>
+            {{else}}
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">用户中心 <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="/users/manage/login">登录</a></li>
+                    <li><a href="/users/manage/register">注册</a></li>
+                </ul>
+            </li>
+            {{/if}}
+        </ul>
+    </nav>
+
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="text-align: center">书籍信息列表</h3>
+        </div>
+        <div class="panel-body">
+            <div id="write"></div>
+        </div>
+        <a id="nextPage" href=#" class="btn btn-danger btn-block" role="button">下一页</a>
+    </div>
+</body>
+</html>
+
+<script src="/lib/js/jquery.cookie.min.js"></script>
+<script>
+    var currentPage = 1;
+    //定义一个状态量判断是否处于加载中
+    var isLoading = false;
+
+    //初始化加载10条数据
+    getData();
+    $('#nextPage').click(function (e) {
+        e.preventDefault();
+        if(isLoading){
+            return false;
+        }else{
+            currentPage += 1;
+            getData();
+        }
+    });
+
+    //取数据，每次10条
+    function getData() {
+        $.ajax({
+            url: '/users/book/get_data/' + currentPage,
+            type: 'get',
+            dataType: 'json',
+            beforeSend: function () {
+                isLoading = true;
+            },
+            success: function (res) {
+                var data = res.data;
+                var strHtml = '';
+                data.forEach(function (ele) {
+                    strHtml += `<div class="col-sm-3">
+                	                <div class="thumbnail">
+                		                <img src="${ele.img}">
+                                        <p style="height: 22px; overflow: hidden">${ele.title}</p>
+                                        <p style="height: 22px; overflow: hidden">${ele.author}</p>
+                                        <button onclick="doPick('${ele._id}')" class="btn btn-info">借阅</button>
+                	                </div>
+                                    </div>`;
+                });
+                //往页面中追加数据
+                $('#write').append(strHtml);
+            },
+            error: function (err) {
+                console.dir(err);
+            },
+            complete: function () {
+                isLoading = false;
+            }
+        })
+    }
+
+    // 点击借阅按钮处理，形参id为book_id
+    function doPick(id) {
+        {{if isLogined}}
+        $.ajax({
+            method: 'post',
+            data: {id:id},
+            url: '/users/book/pick',
+            success: function (res) {
+                alert(res.msg);
+            },
+            error: function (err) {
+                console.dir(err);
+            }
+        })
+        {{else}}
+        alert('请先登录!');
+        {{/if}}
+    }
+
+    //用户登出处理
+    function logOut() {
+        $.removeCookie('user_id',{path:'/'});
+        location.href = '/';
+    }
+</script>

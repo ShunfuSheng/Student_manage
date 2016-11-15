@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
@@ -26,11 +25,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //引入子模板
-app.use('/', routes);
+// 系统自带子模块
 app.use('/users', users);
+// 旧版的学生信息管理模块，包括增删查改功能
 app.use('/admin/manage', require('./routes/admin/manage'));
+// 写死的管理员模块
 app.use('/admin/admin_user', require('./routes/admin/admin_user'));
+// 学生个人管理模块，包括注册、登录、个人页面展示
+app.use('/users/manage', require('./routes/users/manage'));
+//书籍管理模块，包括书籍列表展示、个人借阅处理
+app.use('/users/book', require('./routes/users/book'));
 
+
+//网站根路径的重定向
+app.get('/', function (req, res) {
+  res.redirect('/users/book/list');
+})
 
 
 

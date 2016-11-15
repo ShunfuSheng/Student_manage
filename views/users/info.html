@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息页面</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="/lib/js/jquery.js"></script>
+    <script src="/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <a class="navbar-brand" href="#">学生图书借阅系统</a>
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="/">书籍列表</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a onclick="logOut()" href="javascript:;">{{user.name}} 退出<span class="glyphicon glyphicon-new-window"></span></a></li>
+            </ul>
+        </nav>
+
+        <div class="panel panel-info" style="padding-top: 80px">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="text-align: center">个人信息</h3>
+            </div>
+            <div class="panel-body has-success">
+                <table class="table table-bordered table-hover">
+                	<thead>
+                		<tr>
+                            <th>序号</th>
+                            <th>书名</th>
+                            <th>作者</th>
+                            <th>订阅时间</th>
+                		</tr>
+                	</thead>
+                	<tbody>
+                		{{each books}}
+                        <tr>
+                            <td>{{$index + 1}}</td>
+                            <td>{{$value.book_id.title}}</td>
+                            <td>{{$value.book_id.author}}</td>
+                            <td>{{$value.getBookedDate()}}</td>
+                        </tr>
+                        {{/each}}
+                	</tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="/lib/js/jquery.cookie.min.js"></script>
+<script>
+    function logOut() {
+        $.removeCookie('user_id',{path:'/'});
+        window.location.reload();
+    }
+</script>
