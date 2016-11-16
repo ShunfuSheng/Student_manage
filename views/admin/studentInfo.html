@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息页面</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="/lib/js/jquery.js"></script>
+    <script src="/lib/My97DatePicker/WdatePicker.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title" style="text-align: center">借阅情况</h3>
+        </div>
+        <div class="jumbotron">
+            <h1>{{user_info.name}}</h1>
+            <p>性别: {{user_info.sex}}</p>
+            <p>年龄: {{user_info.getAge()}}</p>
+            <p>联系方式: {{user_info.mobile}}</p>
+            <p>邮箱地址: {{user_info.email}}</p>
+        </div>
+        <div class="panel-body has-success">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>书名</th>
+                    <th>作者</th>
+                    <th>订阅时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each book_info}}
+                <tr>
+                    <td>{{$index + 1}}</td>
+                    <td>{{$value.book_id.title}}</td>
+                    <td>{{$value.book_id.author}}</td>
+                    <td>{{$value.getBookedDate()}}</td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

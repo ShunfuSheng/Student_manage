@@ -24,16 +24,35 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
+//路由地址模糊匹配，在此处做管理后台的登录判断，如果没有登录，那么跳转到登录页面
+app.all('/admin/*', function (req, res, next) {
+  console.log('你访问的是管理后台');
+  var currentPath = req.path;
+  if(currentPath == '/admin/admin_user/login'){
+    next();
+  }else{
+    //如果cookie中存在管理员信息
+    if(req.cookies.admin_user_name){
+      next();
+    }else{
+      res.redirect('/admin/admin_user/login');
+    }
+  }
+})
+
+
 //引入子模板
 // 系统自带子模块
 app.use('/users', users);
-// 旧版的学生信息管理模块，包括增删查改功能
+// 学生信息管理模块，包括对学生信息的增删查改功能
 app.use('/admin/manage', require('./routes/admin/manage'));
 // 写死的管理员模块
 app.use('/admin/admin_user', require('./routes/admin/admin_user'));
 // 学生个人管理模块，包括注册、登录、个人页面展示
 app.use('/users/manage', require('./routes/users/manage'));
-//书籍管理模块，包括书籍列表展示、个人借阅处理
+// 书籍管理模块，包括书籍列表展示、个人借阅处理
 app.use('/users/book', require('./routes/users/book'));
 
 

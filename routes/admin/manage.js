@@ -6,6 +6,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../../module/db');
 var Student = db.Student;
+var StudentBook = db.StudentBook;
 
 
 //学生信息展示页
@@ -102,6 +103,19 @@ router.post('/perItem/operate', function (req, res) {
     //执行修改操作
     Student.findByIdAndUpdate(id, obj, function () {
         res.redirect('/admin/manage/');
+    })
+});
+
+//查看用户的借阅信息
+router.get('/perItem/studentInfo', function (req, res) {
+    var user_id = JSON.parse(req.query.id);
+    Student.findById(user_id).then(function (data) {
+        if(data){
+            StudentBook.find({user_id: user_id}).populate('book_id')
+                .then(function (sbData) {
+                    res.render('admin/studentInfo', {user_info: data, book_info: sbData});
+                })
+        }
     })
 })
 

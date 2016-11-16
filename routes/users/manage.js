@@ -45,7 +45,7 @@ router.post('/login', function (req, res) {
 })
 
 
-router.get('/register/', function (req, res) {
+router.get('/register', function (req, res) {
     //注册前首先创一条带_id的空记录，然后把此唯一标识id带过去
     var student = new Student();
     res.render('users/register', {data: student});
@@ -61,6 +61,9 @@ router.post('/register/:id?', function (req, res) {
                 if(data){
                     res.json({status: '400', msg: '注册失败'});
                 }else{
+                    var timeSpan = new Date(Date.now()+24*60*60*1000*10);
+                    //设置cookie 保存用户id信息
+                    res.cookie('user_id', req.params.id, {path: '/', expires: timeSpan});
                     res.json({status: '200', msg: '注册成功'});
                 }
             })

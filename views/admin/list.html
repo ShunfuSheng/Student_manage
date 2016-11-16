@@ -23,7 +23,7 @@
                       </div>
                       <button type="submit" class="btn btn-default">搜索</button>
                   </form>
-                    <button onclick="location.href='/admin/manage/edit/add'" type="button" class="btn btn-danger pull-right" style="margin-bottom: 10px">新增</button>
+                    <button onclick="logOut()" type="button" class="btn btn-danger pull-right" style="margin-bottom: 10px">退出</button>
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -34,24 +34,23 @@
                                 <th>出生日期</th>
                                 <th>手机号</th>
                                 <th>邮箱</th>
-                                <th>家庭住址</th>
                                 <th>编辑</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{each student_info}}
                                 <tr>
-                                    <td>{{$value.user_id}}</td>
+                                    <td>{{$index + 1}}</td>
                                     <td>{{$value.name}}</td>
                                     <td>{{$value.sex}}</td>
                                     <td>{{$value.getAge()}}</td>
                                     <td>{{$value.getBirthday()}}</td>
                                     <td>{{$value.mobile}}</td>
                                     <td>{{$value.email}}</td>
-                                    <td>{{$value.location}}</td>
                                     <td style="text-align: center">
                                         <a href="/admin/manage/perItem/operate?id={{$value.getId()}}" class="btn btn-success" role="button">修改</a>
-                                        <a href="javascript:;" class="btn btn-info del" data-id="{{$value.getId()}}" data-name="{{$value.name}}" role="button">删除</a>
+                                        <a href="javascript:;" class="btn btn-danger del" data-id="{{$value.getId()}}" data-name="{{$value.name}}" role="button">删除</a>
+                                        <a href="/admin/manage/perItem/studentInfo?id={{$value.getId()}}" class="btn btn-info" role="button">借阅信息</a>
                                     </td>
                                 </tr>
                             {{/each}}
@@ -80,6 +79,8 @@
 </body>
 </html>
 
+
+<script src="/lib/js/jquery.cookie.min.js"></script>
 <script>
     //点击分页时带上查询参数
     var param = window.location.search;
@@ -87,4 +88,10 @@
         var base_link = $(this).attr('href');
         $(this).attr('href', base_link + param);
     })
+
+    //用户退出处理
+    function logOut() {
+        $.removeCookie('admin_user_name',{path:'/'});
+        location.reload();
+    }
 </script>

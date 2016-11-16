@@ -16,9 +16,6 @@ var arrAdmin = [{
     userPwd: '123456'
 }];
 
-router.get('/', function (req, res) {
-    res.redirect('/admin/admin_user/login');
-})
 
 router.get('/login', function (req, res) {
     res.render('admin/login');
@@ -34,6 +31,9 @@ router.post('/login', function (req, res) {
     })
     if(result){
         if(result.userPwd == user_pwd){
+            //登录成功时设置cookie，保存管理员id信息
+            var timeSpan = new Date(Date.now()+24*60*60*1000*10);
+            res.cookie('admin_user_name', user_name, {path: '/', expires: timeSpan});
             res.json({
                 status: '200',
                 msg: '登录成功'
@@ -51,6 +51,8 @@ router.post('/login', function (req, res) {
         });
     }
 });
+
+
 
 
 
