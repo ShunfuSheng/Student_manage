@@ -6,7 +6,7 @@ var mongoDB = require('mongoose');
 //使用nodejs内置的promise实现替换
 mongoDB.Promise = Promise;
 mongoDB.connect('mongodb://localhost/books_db');
-var Schema = mongoDB.Schema;
+var Schema = mongoDB.Schema;    //通过它可以定义数据库model的相关内容，type、default
 
 
 //定义表字段，不包含年龄
@@ -44,9 +44,9 @@ studentSchema.statics.findByName = function (name, callBack) {
     this.find({name:name},callBack).exec();
 }
 
-
 //拿到模型对象
 var Student = mongoDB.model('student', studentSchema);
+
 
 
 //创建book模型
@@ -60,7 +60,12 @@ var bookSchema = new Schema({
     type: String
 })
 
-//做表关联，ref的时候需要制定模型的名字即db.model()中的第一个参数
+//拿到model对象
+var DangdangBook = mongoDB.model('book', bookSchema);
+
+
+
+//创建一个orm用做表关联，ref的时候需要制定模型的名字即db.model()中的第一个参数
 var studentBookSchema = new Schema({
     booked_date:{
         type: Date,
@@ -86,13 +91,13 @@ studentBookSchema.methods.getBookedDate = function () {
     return (year + '-' + month + '-' + date + ' ' + hour + ':' + min);
 }
 
-var DangdangBook = mongoDB.model('book', bookSchema);
+//拿到model对象
 var StudentBook = mongoDB.model('student_book',studentBookSchema);
 
 
 
 
-//导出模块
+//导出模块，多个mongoose对象同时连接一个数据库会报错，所以合在一起写
 module.exports = {
     Student: Student,
     DangdangBook: DangdangBook,

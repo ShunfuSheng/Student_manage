@@ -5,7 +5,6 @@
     <title>图书信息展示</title>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="/lib/js/jquery.js"></script>
-    <script src="/lib/My97DatePicker/WdatePicker.js"></script>
     <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -81,8 +80,9 @@
     //取数据，每次10条
     function getData() {
         $.ajax({
-            url: '/users/book/get_data/' + $('#searchForm input').val() + '?page=' + currentPage,
+            url: '/users/book/get_data/' + $('#searchForm input').val(),
             type: 'get',
+            data: {page: currentPage},
             dataType: 'json',
             beforeSend: function () {
                 isLoading = true;
