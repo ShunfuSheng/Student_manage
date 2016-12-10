@@ -37,7 +37,7 @@ router.get('/get_data/:search?', function (req, res) {
     if(req.params.search){
         filter.title = new RegExp(String(req.params.search), 'i');
     }
-    DangdangBook.find(filter).select('img title author').limit(10).skip(10*(currentPage-1)).then(function (data) {
+    DangdangBook.find(filter).select('img link title author').limit(10).skip(10*(currentPage-1)).then(function (data) {
         if(data.length > 0){
             res.json({status: '200', data: data});
         }else{

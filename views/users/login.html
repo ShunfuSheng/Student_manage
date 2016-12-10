@@ -67,8 +67,8 @@
         submitHandler:function(ele){
             // 在此处通过ajax方式提交表单数据到服务器
             $.ajax({
-                type:'post',
                 url:'/users/manage/login',
+                method: 'post',
                 dataType:'json',
                 data:$(ele).serialize(),
                 success:function(res){

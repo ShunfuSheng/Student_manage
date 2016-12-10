@@ -41,6 +41,8 @@ router.post('/login', function (req, res) {
         }else{
             res.json({status: '400', msg: '用户信息不存在，请先注册'});
         }
+    }).catch(function (err) {
+        console.dir(err);
     })
 })
 
@@ -68,6 +70,8 @@ router.post('/register/:id?', function (req, res) {
                 }
             })
         }
+    }).catch(function (err) {
+        console.dir(err);
     })
 });
 

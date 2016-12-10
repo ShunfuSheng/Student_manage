@@ -99,7 +99,7 @@
                 data.forEach(function (ele) {
                     strHtml += `<div class="col-sm-3">
                 	                <div class="thumbnail">
-                		                <img src="${ele.img}">
+                		                <a href="${ele.link}" target="_blank"><img src="${ele.img}"></a>
                                         <p style="height: 22px; overflow: hidden">${ele.title}</p>
                                         <p style="height: 22px; overflow: hidden">${ele.author}</p>
                                         <button onclick="doPick('${ele._id}')" class="btn btn-info">借阅</button>
